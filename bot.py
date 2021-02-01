@@ -1,5 +1,6 @@
 import discord
 import random
+import numpy as np
 from discord.ext import commands
 from discord.ext.commands import has_role
 
@@ -9,6 +10,7 @@ bot = commands.Bot(command_prefix = '!')
 @bot.event                                      #on_ready
 async def on_ready():
     print("working")
+
 
 @bot.command()                                      #help
 async def h(ctx):
@@ -20,6 +22,7 @@ async def h(ctx):
                     !roll <range> <amount)> (eg !roll 100 1) rolls a random number between the range and the amount of times to roll\n
                     !dm <user> <amount> <text> (eg !dm cook 1 wagwan) bot will dm user amount of times specified
                     """)
+
 
 @bot.command()                                      #!cluck
 async def cluck(ctx, *, userString):
@@ -34,13 +37,15 @@ async def cluck(ctx, *, userString):
         if char != ' ':
             i = not i
     await ctx.send(ret)
-    
+
+
 @bot.command()                                      #!clear
 @commands.has_role("botMaster")
 async def clear(ctx, amount=1):
     await ctx.channel.purge(limit=1)
     await ctx.channel.purge(limit=amount)
-    
+
+
 @bot.command()                                      #!spamMove
 @commands.has_role("botMaster")
 async def spamMove(ctx, member: discord.Member, number=2):
@@ -54,7 +59,8 @@ async def spamMove(ctx, member: discord.Member, number=2):
     while i < number: 
         await member.edit(voice_channel=random.choice(channelList))   #move user to random channel n times
         i += 1
-        
+
+
 @bot.command()                                      #!roll
 async def roll(ctx, number=100, amount=1):
     await ctx.channel.purge(limit=1)
@@ -65,7 +71,8 @@ async def roll(ctx, number=100, amount=1):
         while i < amount:
             await ctx.send(random.randint(0, number))
             i += 1
-   
+
+
 @bot.command()                                      #!dm
 @commands.has_role("botMaster")
 async def dm(ctx, member: discord.Member, amount=1, *, userString):
@@ -75,5 +82,12 @@ async def dm(ctx, member: discord.Member, amount=1, *, userString):
         await member.send(f"**{userString}**")
         i += 1
 
-   
+
+@bot.command()                                      #!gamble
+async def gamble(ctx, members: commands.Greedy[discord.Member], amount=100, *, userString):
+    for m in members:
+        roll = random.randint(0, amount)
+        await ctx.send(f"{m} rolled: " + str(roll))
+
+
 bot.run('ODA1MDk2NDE5OTA3NzMxNDk4.YBV6eA.FIGCYs9nmsnEH1V5ac-7zR09I3Y')
