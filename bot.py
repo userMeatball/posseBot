@@ -58,10 +58,13 @@ async def spamMove(ctx, member: discord.Member, number=2):
 @bot.command()                                      #!roll
 async def roll(ctx, number=100, amount=1):
     await ctx.channel.purge(limit=1)
-    i = 0
-    while i < amount:
-        await ctx.send(random.randint(0, number))
-        i += 1
+    if amount > 20:
+        await ctx.send("You entered " + str(amount) + " time to rolls. Max amount of rolls per command is 20")
+    else:
+        i = 0
+        while i < amount:
+            await ctx.send(random.randint(0, number))
+            i += 1
    
 @bot.command()                                      #!dm
 @commands.has_role("botMaster")
