@@ -1,6 +1,5 @@
 import discord
 import random
-import numpy as np
 from discord.ext import commands
 from discord.ext.commands import has_role
 
@@ -12,6 +11,7 @@ async def on_ready():
     print("working")
 
 
+
 @bot.command()                                      #help
 async def h(ctx):
     await ctx.channel.purge(limit=1)
@@ -20,7 +20,8 @@ async def h(ctx):
                     !cluck <text> (eg !cluck hello) transforms text into 'cluck' format\n
                     !clear <amount> (eg !clear 10) clears specified amount of messages in chat\n
                     !roll <range> <amount)> (eg !roll 100 1) rolls a random number between the range and the amount of times to roll\n
-                    !dm <user> <amount> <text> (eg !dm cook 1 wagwan) bot will dm user amount of times specified
+                    !dm <user> <amount> <text> (eg !dm cook 1 wagwan) bot will dm user amount of times specified\n
+                    !gamble <user> <amount> <text>(eg !gamble Meatball cook 100 gold) will roll random and pick a winner
                     """)
 
 
@@ -85,9 +86,25 @@ async def dm(ctx, member: discord.Member, amount=1, *, userString):
 
 @bot.command()                                      #!gamble
 async def gamble(ctx, members: commands.Greedy[discord.Member], amount=100, *, userString):
+    players = [["", 0] for u in range(len(members))]
+    i = 0
     for m in members:
         roll = random.randint(0, amount)
         await ctx.send(f"{m} rolled: " + str(roll))
+        players[i] = [f"{m}", roll]
+        i += 1
+    
+    winner = players[0][0]
+    i = 0
+    for w,p in players:
+        if p > players[i][1]:
+            winner = w
+        elif p == players[i][1]:
+            winner += w
+    i += 1
+    
+    await ctx.send("The winner is " + winner + "!")
+
 
 
 bot.run('ODA1MDk2NDE5OTA3NzMxNDk4.YBV6eA.FIGCYs9nmsnEH1V5ac-7zR09I3Y')
