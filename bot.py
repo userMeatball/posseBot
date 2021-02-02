@@ -107,4 +107,4 @@ async def gamble(ctx, members: commands.Greedy[discord.Member], amount=100, *, u
 
 
 
-bot.run('ODA1MDk2NDE5OTA3NzMxNDk4.YBV6eA.FIGCYs9nmsnEH1V5ac-7zR09I3Y')
+bot.run('TOKEN')
