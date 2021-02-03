@@ -11,7 +11,6 @@ async def on_ready():
     print("working")
 
 
-
 @bot.command()                                      #help
 async def h(ctx):
     await ctx.channel.purge(limit=1)
@@ -100,7 +99,7 @@ async def gamble(ctx, members: commands.Greedy[discord.Member], amount=100, *, u
         if p > players[i][1]:
             winner = w
         elif p == players[i][1]:
-            winner += w
+            winner += "drew with " + w
     i += 1
     
     await ctx.send("The winner is " + winner + "!")
