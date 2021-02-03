@@ -1,5 +1,6 @@
 import discord
 import random
+from translate import Translator
 from discord.ext import commands
 from discord.ext.commands import has_role
 
@@ -18,9 +19,11 @@ async def h(ctx):
                     Available commands:\n
                     !cluck <text> (eg !cluck hello) transforms text into 'cluck' format\n
                     !clear <amount> (eg !clear 10) clears specified amount of messages in chat\n
-                    !roll <range> <amount)> (eg !roll 100 1) rolls a random number between the range and the amount of times to roll\n
-                    !dm <user> <amount> <text> (eg !dm cook 1 wagwan) bot will dm user amount of times specified\n
-                    !gamble <user> <amount> <text>(eg !gamble Meatball cook 100 gold) will roll random and pick a winner
+                    !gamble <user> <amount> <text>(eg !gamble Meatball cook 100 gold) will roll random and pick a winner\n
+                    !cointoss will flip a coin\n
+                    !reverse <text> (eg !reverse hello) will reverse your text\n
+                    !eightball <text> (eg !eightball will i win) tell your fortune on yes/no questions\n
+                    !translate <language> <text> (eg !translate french you french pig!) translates your text
                     """)
 
 
@@ -61,18 +64,6 @@ async def spamMove(ctx, member: discord.Member, number=2):
         i += 1
 
 
-@bot.command()                                      #!roll
-async def roll(ctx, number=100, amount=1):
-    await ctx.channel.purge(limit=1)
-    if amount > 20:
-        await ctx.send("You entered " + str(amount) + " time to rolls. Max amount of rolls per command is 20")
-    else:
-        i = 0
-        while i < amount:
-            await ctx.send(random.randint(0, number))
-            i += 1
-
-
 @bot.command()                                      #!dm
 @commands.has_role("botMaster")
 async def dm(ctx, member: discord.Member, amount=1, *, userString):
@@ -103,6 +94,51 @@ async def gamble(ctx, members: commands.Greedy[discord.Member], amount=100, *, u
     i += 1
     
     await ctx.send("The winner is " + winner + "!")
+    
+    
+@bot.command()
+async def cointoss(ctx):
+    coin = ["heads", "tails"]
+    await ctx.send(random.choice(coin))
+    
+    
+@bot.command()
+async def reverse(ctx, *, userString):
+    await ctx.channel.purge(limit=1)
+    string = str(userString) [::-1]
+    await ctx.send(string)
+    
+    
+@bot.command()
+async def eightball(ctx):
+    responses = ["It is certain",
+    "Without a doubt",
+    "You may rely on it",
+    "Yes definitely",
+    "It is decidedly so",
+    "As I see it, yes",
+    "Most likely",
+    "Yes",
+    "Outlook good",
+    "Signs point to yes",
+    "Reply hazy try again",
+    "Better not tell you now",
+    "Ask again later",
+    "Cannot predict now",
+    "Concentrate and ask again",
+    "Don’t count on it",
+    "Outlook not so good",
+    "My sources say no",
+    "Very doubtful",
+    "My reply is no"]
+    
+    await ctx.send(random.choice(responses))
+    
+@bot.command()
+async def translate(ctx, lang, *, userString):
+    translator = Translator(to_lang=f"{lang}")
+    translation = translator.translate(f"{userString}")
+    await ctx.send(translation)
 
 
 
