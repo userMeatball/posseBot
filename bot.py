@@ -77,6 +77,8 @@ async def dm(ctx, member: discord.Member, amount=1, *, userString):
 @bot.command()
 async def roll(ctx, value):
     await ctx.channel.purge(limit=1)
+    roll = random.randint(0, value)
+    await ctx.send("You rolled " + str(roll))
 
 
 @bot.command()                                      #!gamble
