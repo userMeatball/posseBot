@@ -18,7 +18,7 @@ async def h(ctx):
     await ctx.send("""Use '!' to start a command\n
                     Available commands:\n
                     !cluck <text> (eg !cluck hello) transforms text into 'cluck' format\n
-                    !clear <amount> (eg !clear 10) clears specified amount of messages in chat\n
+                    !roll <value> (eg !roll 100) rolls a random number in range of value\n
                     !gamble <user> <text>(eg !gamble Meatball cook 100 gold) will roll random and pick a winner\n
                     !cointoss will flip a coin\n
                     !reverse <text> (eg !reverse hello) will reverse your text\n
@@ -72,6 +72,11 @@ async def dm(ctx, member: discord.Member, amount=1, *, userString):
     while i < amount:
         await member.send(f"**{userString}**")
         i += 1
+        
+        
+@bot.command()
+async def roll(ctx, value):
+    await ctx.channel.purge(limit=1)
 
 
 @bot.command()                                      #!gamble
