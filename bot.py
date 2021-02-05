@@ -19,7 +19,7 @@ async def h(ctx):
                     Available commands:\n
                     !cluck <text> (eg !cluck hello) transforms text into 'cluck' format\n
                     !clear <amount> (eg !clear 10) clears specified amount of messages in chat\n
-                    !gamble <user> <amount> <text>(eg !gamble Meatball cook 100 gold) will roll random and pick a winner\n
+                    !gamble <user> <text>(eg !gamble Meatball cook 100 gold) will roll random and pick a winner\n
                     !cointoss will flip a coin\n
                     !reverse <text> (eg !reverse hello) will reverse your text\n
                     !eightball <text> (eg !eightball will i win) tell your fortune on yes/no questions\n
@@ -75,11 +75,11 @@ async def dm(ctx, member: discord.Member, amount=1, *, userString):
 
 
 @bot.command()                                      #!gamble
-async def gamble(ctx, members: commands.Greedy[discord.Member], amount=100, *, userString):
+async def gamble(ctx, members: commands.Greedy[discord.Member], *, userString):
     players = [["", 0] for u in range(len(members))]
     i = 0
     for m in members:
-        roll = random.randint(0, amount)
+        roll = random.randint(0, 100)
         await ctx.send(f"{m} rolled: " + str(roll))
         players[i] = [f"{m}", roll]
         i += 1
@@ -89,7 +89,7 @@ async def gamble(ctx, members: commands.Greedy[discord.Member], amount=100, *, u
     for w,p in players:
         if p > players[i][1]:
             winner = w
-        elif p == players[i][1]:
+        elif p == players[i][1] and w != players[i][1]:
             winner += " drew with " + w
     i += 1
     
