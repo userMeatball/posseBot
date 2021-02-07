@@ -1,5 +1,6 @@
 import discord
 import random
+import time
 from translate import Translator
 from discord.ext import commands
 from discord.ext.commands import has_role
@@ -23,7 +24,8 @@ async def h(ctx):
                     !cointoss will flip a coin\n
                     !reverse <text> (eg !reverse hello) will reverse your text\n
                     !eightball <text> (eg !eightball will i win) tell your fortune on yes/no questions\n
-                    !translate <language> <text> (eg !translate french you french pig!) translates your text
+                    !translate <language> <text> (eg !translate french you french pig!) translates your text\n
+                    !rps <choice> (eg !rps rock) play rock, paper, scissors with the bot
                     """)
 
 
@@ -66,15 +68,16 @@ async def spamMove(ctx, member: discord.Member, number=2):
 
 @bot.command()                                      #!dm
 @commands.has_role("botMaster")
-async def dm(ctx, member: discord.Member, amount=1, *, userString):
+async def dm(ctx, member: discord.Member, amount=1, sleep=0, *, userString):
     await ctx.channel.purge(limit=1)
     i = 0
     while i < amount:
         await member.send(f"**{userString}**")
+        time.sleep(sleep)
         i += 1
         
         
-@bot.command()
+@bot.command()                                      #!roll
 async def roll(ctx, value):
     await ctx.channel.purge(limit=1)
     roll = random.randint(0, value)
@@ -103,20 +106,20 @@ async def gamble(ctx, members: commands.Greedy[discord.Member], *, userString):
     await ctx.send("The winner is " + winner + "!")
     
     
-@bot.command()
+@bot.command()                                      #!cointoss
 async def cointoss(ctx):
     coin = ["heads", "tails"]
     await ctx.send(random.choice(coin))
     
     
-@bot.command()
+@bot.command()                                      #!reverse
 async def reverse(ctx, *, userString):
     await ctx.channel.purge(limit=1)
     string = str(userString) [::-1]
     await ctx.send(string)
     
     
-@bot.command()
+@bot.command()                                      #!eightball
 async def eightball(ctx):
     responses = ["It is certain",
     "Without a doubt",
@@ -141,12 +144,47 @@ async def eightball(ctx):
     
     await ctx.send(random.choice(responses))
     
-@bot.command()
+@bot.command()                                      #!translate
 async def translate(ctx, lang, *, userString):
     translator = Translator(to_lang=f"{lang}")
     translation = translator.translate(f"{userString}")
     await ctx.send(translation)
 
+@bot.command()                                      #!rps
+async def rps(ctx, userChoice):
+    options = ["rock",
+            "paper",
+            "scissors"]
+
+    cpuChoice = random.choice(options)
+
+    await ctx.send("Rock...")
+    time.sleep(1)
+    await ctx.send("Paper...")
+    time.sleep(1)
+    await ctx.send("Scissors...")
+    time.sleep(1)
+
+    if userChoice == "rock"  and cpuChoice == "rock":
+        await ctx.send("cpu chose rock too! it's a draw!")
+    elif userChoice == "rock" and cpuChoice == "paper":
+        await ctx.send("cpu chose paper! you lose!")
+    elif userChoice == "rock" and cpuChoice == "scissors":
+        await ctx.send("cpu chose scissors! you win!")
+    elif userChoice == "paper" and cpuChoice == "paper":
+        await ctx.send("cpu choose paper too! it's a draw!")
+    elif userChoice == "paper" and cpuChoice == "rock":
+        await ctx.send("cpu chose rock! you lose!")
+    elif userChoice == "paper" and cpuChoice == "scissors":
+        await ctx.send("cpu chose scissors! you win!")
+    elif userChoice == "scissors" and cpuChoice == "scissors":
+        await ctx.send("cpu choose scissors too! it's a draw!")
+    elif userChoice == "scissors" and cpuChoice == "rock":
+        await ctx.send("cpu chose scissors! you lose!")
+    elif userChoice == "scissors" and cpuChoice == "paper":
+        await ctx.send("cpu chose paper! you win!")
+    else:
+        await ctx.send("you didn't pick a valid choice")
 
 
-bot.run('TOKEN')
+
